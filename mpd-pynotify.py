@@ -62,15 +62,16 @@ def main():
             print 'Error trying to pass auth.'
             client.disconnect()
             sys.exit(2)
-
-    prevsong=client.playlistinfo()[int(client.status()["songid"])]
+    
+    print client.playlistinfo()
+    print client.status()
+    prevsong=client.playlistinfo()[int(client.status()["song"])]
     while True:
-        currsong=client.playlistinfo()[int(client.status()["songid"])]
+        currsong=client.playlistinfo()[int(client.status()["song"])]
         if not prevsong == currsong:
             prevsong = currsong
-            notify = pynotify.Notification(client.playlistinfo()[int(client.status()["songid"])]["title"],client.playlistinfo()[int(client.status()["songid"])]["artist"], Icon)
+            notify = pynotify.Notification(client.playlistinfo()[int(client.status()["song"])]["title"],client.playlistinfo()[int(client.status()["song"])]["artist"], Icon)
             notify.set_urgency(pynotify.URGENCY_CRITICAL)
-            notify.set_timeout(100)
             notify.show()
         time.sleep(1)
 

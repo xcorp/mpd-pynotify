@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/python
+
 
 # IMPORTS
 import sys
@@ -15,8 +15,10 @@ PASSWORD = False
 CON_ID = {'host':HOST, 'port':PORT}
 ##  
 
-Icon="file:///home/xcorp/src/mpd-pynotify/sonata.png"
-
+tune="file:///home/xcorp/src/mpd-pynotify/Tune.png"
+Play="file:///home/xcorp/src/mpd-pynotify/Play.png"
+Pause="file:///home/xcorp/src/mpd-pynotify/Pause.png"
+Stop="file:///home/xcorp/src/mpd-pynotify/Stop.png"
 ## Some functions
 def mpdConnect(client, con_id):
     """
@@ -50,9 +52,7 @@ def main():
     
     ## MPD object instance
     client = mpd.MPDClient()
-    if mpdConnect(client, CON_ID):
-        pass
-    else:
+    if not mpdConnect(client, CON_ID):
         print 'fail to connect MPD server.'
         sys.exit(1)
 
@@ -64,16 +64,31 @@ def main():
             print 'Error trying to pass auth.'
             client.disconnect()
             sys.exit(2)
-    
-    prevsong=client.playlistinfo()[int(client.status()["song"])]
-    while True:
-        client.idle()
-        currsong=client.playlistinfo()[int(client.status()["song"])]
+            
+
+    prevsong=client.playlistinfo()[int(client.status()['song'])]
+    prevstate=client.status()['state']
+    while True:     
+        client.idle('player')
+        currsong=client.playlistinfo()[int(client.status()['song'])]
+        currstate=client.status()['state']
+        print currstate
+        if not prevstate == currstate:
+            prevstate = currstate
+            if currstate == 'play':
+                Icon = Play
+            elif currstate == 'pause':
+                Icon = Pause
+            elif currstate == 'stop':
+                Icon = Stop
+            else:
+                Icon = Tune
         if not prevsong == currsong:
             prevsong = currsong
-            notify.update(client.playlistinfo()[int(client.status()["song"])]["title"],client.playlistinfo()[int(client.status()["song"])]["artist"], Icon)
-            notify.show()             
-
+            Icon = tune
+        notify.update(client.playlistinfo()[int(client.status()['song'])]['title'],client.playlistinfo()[int(client.status()['song'])]["artist"], Icon)
+        notify.show()             
+        
     client.disconnect()
     sys.exit(0)
 

@@ -51,7 +51,7 @@ def main():
     ## MPD object instance
     client = mpd.MPDClient()
     if mpdConnect(client, CON_ID):
-        print 'Got connected!'
+        pass
     else:
         print 'fail to connect MPD server.'
         sys.exit(1)
@@ -65,16 +65,14 @@ def main():
             client.disconnect()
             sys.exit(2)
     
-    print client.playlistinfo()
-    print client.status()
     prevsong=client.playlistinfo()[int(client.status()["song"])]
     while True:
+        client.idle()
         currsong=client.playlistinfo()[int(client.status()["song"])]
         if not prevsong == currsong:
             prevsong = currsong
             notify.update(client.playlistinfo()[int(client.status()["song"])]["title"],client.playlistinfo()[int(client.status()["song"])]["artist"], Icon)
             notify.show()             
-        time.sleep(0.1)
 
     client.disconnect()
     sys.exit(0)

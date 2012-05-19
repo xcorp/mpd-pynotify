@@ -73,7 +73,14 @@ def main():
             notify = pynotify.Notification(client.playlistinfo()[int(client.status()["song"])]["title"],client.playlistinfo()[int(client.status()["song"])]["artist"], Icon)
             notify.set_urgency(pynotify.URGENCY_CRITICAL)
             notify.show()
-        time.sleep(1)
+            for i in range(0,200):
+                currsong=client.playlistinfo()[int(client.status()["song"])]
+                if not prevsong == currsong:
+                    prevsong = currsong
+                    notify.update(client.playlistinfo()[int(client.status()["song"])]["title"],client.playlistinfo()[int(client.status()["song"])]["artist"], Icon)
+                    notify.show()
+                time.sleep(0.05)               
+        time.sleep(0.1)
 
     client.disconnect()
     sys.exit(0)

@@ -72,7 +72,6 @@ def main():
         client.idle('player')
         currsong=client.playlistinfo()[int(client.status()['song'])]
         currstate=client.status()['state']
-        print currstate
         if not prevstate == currstate:
             prevstate = currstate
             if currstate == 'play':

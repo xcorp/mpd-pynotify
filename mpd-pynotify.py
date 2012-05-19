@@ -44,6 +44,8 @@ def main():
     ##Notify init
     if not pynotify.init("mpd-pynotify"):
         sys.exit(1)
+    notify = pynotify.Notification("MPD Notification")
+    notify.set_urgency(pynotify.URGENCY_CRITICAL)
     
     
     ## MPD object instance
@@ -70,16 +72,8 @@ def main():
         currsong=client.playlistinfo()[int(client.status()["song"])]
         if not prevsong == currsong:
             prevsong = currsong
-            notify = pynotify.Notification(client.playlistinfo()[int(client.status()["song"])]["title"],client.playlistinfo()[int(client.status()["song"])]["artist"], Icon)
-            notify.set_urgency(pynotify.URGENCY_CRITICAL)
-            notify.show()
-            for i in range(0,200):
-                currsong=client.playlistinfo()[int(client.status()["song"])]
-                if not prevsong == currsong:
-                    prevsong = currsong
-                    notify.update(client.playlistinfo()[int(client.status()["song"])]["title"],client.playlistinfo()[int(client.status()["song"])]["artist"], Icon)
-                    notify.show()
-                time.sleep(0.05)               
+            notify.update(client.playlistinfo()[int(client.status()["song"])]["title"],client.playlistinfo()[int(client.status()["song"])]["artist"], Icon)
+            notify.show()             
         time.sleep(0.1)
 
     client.disconnect()

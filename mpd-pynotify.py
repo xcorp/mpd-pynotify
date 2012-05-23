@@ -2,10 +2,9 @@
 
 
 # IMPORTS
-import sys
+import sys, os
 import pynotify
 import mpd
-import time
 from socket import error as SocketError
 
 HOST = 'localhost'
@@ -15,10 +14,11 @@ PASSWORD = False
 CON_ID = {'host':HOST, 'port':PORT}
 ##  
 
-tune="file:///home/xcorp/src/mpd-pynotify/Tune.png"
-Play="file:///home/xcorp/src/mpd-pynotify/Play.png"
-Pause="file:///home/xcorp/src/mpd-pynotify/Pause.png"
-Stop="file:///home/xcorp/src/mpd-pynotify/Stop.png"
+
+Tune=os.path.join(os.path.split(__file__)[0], 'Tune.png')
+Play=os.path.join(os.path.split(__file__)[0], 'Play.png')
+Pause=os.path.join(os.path.split(__file__)[0], 'Pause.png')
+Stop=os.path.join(os.path.split(__file__)[0], 'Stop.png')
 ## Some functions
 def mpdConnect(client, con_id):
     """
@@ -65,7 +65,6 @@ def main():
             client.disconnect()
             sys.exit(2)
             
-
     prevsong=client.playlistinfo()[int(client.status()['song'])]
     prevstate=client.status()['state']
     while True:     
@@ -84,7 +83,7 @@ def main():
                 Icon = Tune
         if not prevsong == currsong:
             prevsong = currsong
-            Icon = tune
+            Icon = Tune
         notify.update(client.playlistinfo()[int(client.status()['song'])]['title'],client.playlistinfo()[int(client.status()['song'])]["artist"], Icon)
         notify.show()             
         
